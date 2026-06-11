@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Database Setup Guide - BCTL</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .setup-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .setup-card {
+            background: #f5f5f5;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .setup-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .setup-card code {
+            background: #222;
+            color: #0f0;
+            padding: 10px;
+            display: block;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .btn-secondary {
+            background: #2196F3;
+        }
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <header>
+            <h1>🐾 BCTL - Database Setup Guide</h1>
+            <p>Animal Conservation Database Configuration</p>
+        </header>
+
+        <div class="setup-card">
+            <h3>Step 1: Start XAMPP Services</h3>
+            <p>Open XAMPP Control Panel and ensure these services are running:</p>
+            <ul>
+                <li>✓ Apache</li>
+                <li>✓ MySQL</li>
+            </ul>
+            <p><small>By default: Apache runs on port 80, MySQL on port 3306</small></p>
+        </div>
+
+        <div class="setup-card">
+            <h3>Step 2: Create Database</h3>
+            <p>Method 1: Using phpMyAdmin (Easy)</p>
+            <ol>
+                <li>Open <a href="http://localhost/phpmyadmin" target="_blank">phpMyAdmin</a></li>
+                <li>Click <strong>SQL</strong> tab</li>
+                <li>Download and paste contents from <code>config/schema.sql</code></li>
+                <li>Click <strong>Go</strong></li>
+            </ol>
+            
+            <p>Method 2: Using Command Line</p>
+            <code>mysql -u root &lt; config/schema.sql</code>
+        </div>
+
+        <div class="setup-card">
+            <h3>Step 3: Verify Database Connection</h3>
+            <button class="btn btn-secondary" onclick="testConnection()">Test Database Connection</button>
+            <div id="connection-status" class="status"></div>
+            <div id="connection-result" class="test-result"></div>
+        </div>
+
+        <div class="setup-card">
+            <h3>Step 4: Test API Endpoints</h3>
+            <div class="button-group">
+                <button class="btn" onclick="testGetAnimals()">Get All Animals</button>
+                <button class="btn" onclick="testAddAnimal()">Add Sample Animal</button>
+                <button class="btn" onclick="testStatistics()">Get Statistics</button>
+            </div>
+            <div id="api-status" class="status"></div>
+            <div id="api-result" class="test-result"></div>
+        </div>
+
+        <div class="setup-card">
+            <h3>Database Configuration</h3>
+            <p>Edit <code>config/database.php</code> if needed:</p>
+            <code>
+define('DB_HOST', 'localhost');<br>
+define('DB_USER', 'root');<br>
+define('DB_PASSWORD', '');<br>
+define('DB_NAME', 'bctl_animal_db');
+            </code>
+        </div>
+
+        <div class="setup-card">
+            <h3>Quick API Reference</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="background: #e0e0e0;">
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Action</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Method</th>
+                    <th style="padding: 8px; text-align: left; border: 1px solid #ccc;">Endpoint</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">Get Animals</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;">GET</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;"><code>db-api.php?action=getAnimals</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">Add Animal</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;">POST</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;"><code>db-api.php?action=addAnimal</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">Update Animal</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;">PUT</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;"><code>db-api.php?action=updateAnimal&id=1</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">Delete Animal</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;">DELETE</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;"><code>db-api.php?action=deleteAnimal&id=1</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ccc;">Get Statistics</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;">GET</td>
+                    <td style="padding: 8px; border: 1px solid #ccc;"><code>db-api.php?action=statistics</code></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="setup-card">
+            <h3>Next Steps</h3>
+            <ul>
+                <li>✓ Database is ready for animal data storage</li>
+                <li>→ Update your front-end forms to save to the database</li>
+                <li>→ Use JavaScript API: <code>animal-db.js</code></li>
+                <li>→ Integrate blockchain ledger with database records</li>
+                <li>→ Create admin dashboard for reporting</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="animal-db.js"></script>
+    <script>
+        const db = new AnimalDatabase('../db-api.php');
+
+        function setStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = `status ${type}`;
+        }
+
+        function setResult(elementId, data) {
+            const el = document.getElementById(elementId);
+            el.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function testConnection() {
+            setStatus('connection-status', 'Testing connection...', 'loading');
+            try {
+                const result = await db.getStatistics();
+                if (result.success) {
+                    setStatus('connection-status', '✓ Database connection successful!', 'success');
+                    setResult('connection-result', result.data);
+                } else {
+                    setStatus('connection-status', '✗ ' + (result.error || 'Unknown error'), 'error');
+                    setResult('connection-result', result);
+                }
+            } catch (error) {
+                setStatus('connection-status', '✗ Connection failed: ' + error.message, 'error');
+                setResult('connection-result', { error: error.message });
+            }
+        }
+
+        async function testGetAnimals() {
+            setStatus('api-status', 'Fetching animals...', 'loading');
+            try {
+                const result = await db.getAnimals(10);
+                if (result.success) {
+                    setStatus('api-status', `✓ Found ${result.data.length} animals`, 'success');
+                    setResult('api-result', result.data);
+                } else {
+                    setStatus('api-status', '✗ ' + (result.error || 'No animals found'), 'error');
+                    setResult('api-result', result);
+                }
+            } catch (error) {
+                setStatus('api-status', '✗ Error: ' + error.message, 'error');
+                setResult('api-result', { error: error.message });
+            }
+        }
+
+        async function testAddAnimal() {
+            setStatus('api-status', 'Adding sample animal...', 'loading');
+            try {
+                const sampleAnimal = {
+                    species: 'Lion',
+                    common_name: 'African Lion',
+                    scientific_name: 'Panthera leo',
+                    habitat: 'Savanna',
+                    status: 'Healthy',
+                    location: 'Serengeti',
+                    notes: 'Sample animal for testing',
+                    reporter: 'System Test'
+                };
+                const result = await db.addAnimal(sampleAnimal);
+                if (result.success) {
+                    setStatus('api-status', `✓ Animal added with ID: ${result.animal_id}`, 'success');
+                    setResult('api-result', result);
+                } else {
+                    setStatus('api-status', '✗ ' + (result.error || 'Failed to add animal'), 'error');
+                    setResult('api-result', result);
+                }
+            } catch (error) {
+                setStatus('api-status', '✗ Error: ' + error.message, 'error');
+                setResult('api-result', { error: error.message });
+            }
+        }
+
+        async function testStatistics() {
+            setStatus('api-status', 'Fetching statistics...', 'loading');
+            try {
+                const result = await db.getStatistics();
+                if (result.success) {
+                    setStatus('api-status', '✓ Statistics retrieved', 'success');
+                    setResult('api-result', result.data);
+                } else {
+                    setStatus('api-status', '✗ ' + (result.error || 'Failed to get statistics'), 'error');
+                    setResult('api-result', result);
+                }
+            } catch (error) {
+                setStatus('api-status', '✗ Error: ' + error.message, 'error');
+                setResult('api-result', { error: error.message });
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', testConnection);
+    </script>
+</body>
+</html>
