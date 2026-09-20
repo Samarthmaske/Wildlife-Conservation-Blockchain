@@ -6,17 +6,28 @@ const mineButton = document.getElementById('mine-pending');
 const pendingCountElement = document.getElementById('pending-count');
 const verifyButton = document.getElementById('verify-chain');
 
+const fetchJson = async (url, options = {}) => {
+  try {
+    const res = await fetch(url, options);
+    const data = await res.json();
+    if (!res.ok && !data.error) throw new Error(`HTTP error! status: ${res.status}`);
+    return data;
+  } catch (err) {
+    return { error: 'Server error or invalid response.' };
+  }
+};
+
 const api = {
-  getReports: async () => fetch('./api.php?action=getReports').then(res => res.json()),
-  addReport: async (body) => fetch('./api.php?action=addReport', {
+  getReports: async () => fetchJson('./api.php?action=getReports'),
+  addReport: async (body) => fetchJson('./api.php?action=addReport', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
-  }).then(res => res.json()),
-  minePending: async () => fetch('./api.php?action=minePending', {
+  }),
+  minePending: async () => fetchJson('./api.php?action=minePending', {
     method: 'POST'
-  }).then(res => res.json()),
-  verifyChain: async () => fetch('./api.php?action=getReports').then(res => res.json())
+  }),
+  verifyChain: async () => fetchJson('./api.php?action=getReports')
 };
 
 function showStatus(message, type = 'info') {

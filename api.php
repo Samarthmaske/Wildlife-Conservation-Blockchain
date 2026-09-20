@@ -1,4 +1,5 @@
 <?php
+define('IS_PRODUCTION', true);
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/contract.php';
 
@@ -53,5 +54,6 @@ try {
     echo json_encode(['error' => 'Action not found.']);
 } catch (Throwable $error) {
     http_response_code(500);
-    echo json_encode(['error' => $error->getMessage()]);
+    $errorMessage = defined('IS_PRODUCTION') && IS_PRODUCTION ? 'Internal Server Error' : $error->getMessage();
+    echo json_encode(['error' => $errorMessage]);
 }

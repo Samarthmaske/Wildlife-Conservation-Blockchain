@@ -70,12 +70,12 @@ class ConservationContract
     {
         $report = [
             'id' => $this->getNextPendingId(),
-            'species' => trim($reportData['species'] ?? ''),
-            'location' => trim($reportData['location'] ?? ''),
-            'habitat' => trim($reportData['habitat'] ?? 'Unknown'),
-            'action' => trim($reportData['action'] ?? ''),
-            'notes' => trim($reportData['notes'] ?? ''),
-            'reporter' => trim($reportData['reporter'] ?? ''),
+            'species' => htmlspecialchars(trim($reportData['species'] ?? ''), ENT_QUOTES, 'UTF-8'),
+            'location' => htmlspecialchars(trim($reportData['location'] ?? ''), ENT_QUOTES, 'UTF-8'),
+            'habitat' => htmlspecialchars(trim($reportData['habitat'] ?? 'Unknown'), ENT_QUOTES, 'UTF-8'),
+            'action' => htmlspecialchars(trim($reportData['action'] ?? ''), ENT_QUOTES, 'UTF-8'),
+            'notes' => htmlspecialchars(trim($reportData['notes'] ?? ''), ENT_QUOTES, 'UTF-8'),
+            'reporter' => htmlspecialchars(trim($reportData['reporter'] ?? ''), ENT_QUOTES, 'UTF-8'),
             'timestamp' => time(),
         ];
 
