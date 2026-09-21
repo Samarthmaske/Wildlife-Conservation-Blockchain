@@ -4,15 +4,16 @@
  * Configure your MySQL connection here
  */
 
-// Database credentials
-define('DB_HOST', 'localhost');      // XAMPP default host
-define('DB_USER', 'root');           // XAMPP default user (no password)
-define('DB_PASSWORD', '');           // XAMPP default (empty password)
-define('DB_NAME', 'bctl_animal_db'); // Database name
+// Database credentials - Supports Railway Env Vars and Local XAMPP
+define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');      
+define('DB_USER', getenv('MYSQLUSER') ?: 'root');           
+define('DB_PASSWORD', getenv('MYSQLPASSWORD') ?: '');           
+define('DB_NAME', getenv('MYSQLDATABASE') ?: 'bctl_animal_db'); 
+$port = getenv('MYSQLPORT') ?: 3306;
 
 // Create connection
 try {
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $port);
     
     // Check connection
     if ($conn->connect_error) {
